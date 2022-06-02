@@ -1,39 +1,20 @@
 package bowling.domain;
 
+import bowling.exception.InvalidDeliveryScoreException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class FrameTest {
 
-    @DisplayName("strike 확인")
+    @DisplayName("프레임의 점수 합이 10 이상일 경우 예외 발생")
     @Test
-    void delivery_strike() {
-        Frame frame = new Frame();
-        frame.delivery(10);
-        assertThat(frame.getFirstDelivery()).isEqualTo("X");
-    }
-
-    @DisplayName("spare 확인")
-    @Test
-    void delivery_spare() {
-        Frame frame = new Frame();
-        frame.delivery(3);
-        assertThat(frame.getFirstDelivery()).isEqualTo("3");
-
-        frame.delivery(7);
-        assertThat(frame.getSecondDelivery()).isEqualTo("/");
-    }
-
-    @DisplayName("추가 가능성 확인")
-    @Test
-    void additionallyDeliverable() {
-        Frame frame = new Frame();
-        frame.delivery(3);
-        assertThat(frame.additionallyDeliverable()).isTrue();
-
-        frame.delivery(4);
-        assertThat(frame.additionallyDeliverable()).isFalse();
+    void spareDelivery() {
+        Frame frame = new NormalFrame();
+        frame.firstDelivery = new Delivery("5");
+        assertThatThrownBy(() -> frame.spareDelivery(6, frame.firstDelivery))
+                .isInstanceOf(InvalidDeliveryScoreException.class)
+                .hasMessageContaining("각 프레임 점수의 합 10을 넘을 수 없습니다.");
     }
 }

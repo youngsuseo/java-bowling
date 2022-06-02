@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class bowlingGameTest {
 
-    @DisplayName("bowling game 수 확인")
+    @DisplayName("bowling game 수 생성 확인")
     @Test
     void construct() {
         BowlingGame bowlingGame = new BowlingGame();

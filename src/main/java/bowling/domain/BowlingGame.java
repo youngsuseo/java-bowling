@@ -1,6 +1,6 @@
 package bowling.domain;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BowlingGame {
@@ -13,7 +13,7 @@ public class BowlingGame {
     }
 
     private void initial() {
-        bowlingGame =  new ArrayList<>();
+        bowlingGame =  new LinkedList<>();
         for (int frameIndex = 1; frameIndex <= NUMBERS_OF_NORMAL_FRAME; frameIndex++) {
             bowlingGame.add(new NormalFrame());
         }

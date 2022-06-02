@@ -1,42 +1,54 @@
 package bowling.domain;
 
-public class FinalFrame extends Frame {
-    private String bonusDelivery;
-
-    FinalFrame() {
-    }
+public class FinalFrame extends NormalFrame {
+    private Delivery bonusDelivery;
 
     @Override
     public void delivery(int inputScore) {
-        if (super.firstDelivery == null || super.firstDelivery.isBlank()) {
-            super.firstDelivery = Score.value(inputScore, false);
+        if (firstDeliveryScore(inputScore)) {
             return;
         }
 
-        if (super.secondDelivery == null || super.secondDelivery.isBlank()) {
-            super.secondDelivery = Score.value(inputScore, super.spare(inputScore));
+        if (secondDeliveryScore(inputScore)) {
             return;
         }
 
-        bonusDelivery = Score.value(inputScore, spare(inputScore));
+        bonusDelivery = new Delivery(Symbol.value(inputScore, spare(inputScore)));
     }
+
 
     @Override
     boolean spare(int inputScore) {
-        if (Score.strike(super.secondDelivery) || Score.spare(super.secondDelivery)) {
+        if (firstDelivery == null) { // TODO 없어도 되는 로직이지만 가독성을 위해 추가??
             return false;
         }
 
-        return Integer.parseInt(super.secondDelivery) + inputScore == 10;
+        if (secondDelivery == null) {
+            if (Symbol.strike(firstDelivery)) {
+                return false;
+            }
+            return spareDelivery(inputScore, firstDelivery);
+        }
+
+        if (bonusDelivery == null) { // TODO 없어도 되는 로직이지만 가독성을 위해 추가??
+            if (Symbol.spare(secondDelivery)) {
+                return false;
+            }
+            return spareDelivery(inputScore, secondDelivery);
+        }
+        return false;
     }
 
     @Override
     public boolean additionallyDeliverable() {
         return bonusDelivery == null
-                && (Score.strike(super.firstDelivery) || Score.spare(super.secondDelivery) || super.secondDelivery == null);
+                && (Symbol.strike(super.firstDelivery) || Symbol.spare(super.secondDelivery) || super.secondDelivery == null);
     }
 
     public String getBonusDelivery() {
-        return bonusDelivery;
+        if (bonusDelivery == null) {
+            return null;
+        }
+        return bonusDelivery.getDelivery();
     }
 }

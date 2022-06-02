@@ -1,43 +1,54 @@
 package bowling.domain;
 
-public class Frame {
+import bowling.exception.InvalidDeliveryScoreException;
+
+public abstract class Frame {
     private static final int MAXIMUM_SCORE = 10;
 
-    String firstDelivery;
-    String secondDelivery;
+    Delivery firstDelivery;
+    Delivery secondDelivery;
 
-    Frame() {
+    public abstract void delivery(int inputScore);
+
+    boolean firstDeliveryScore(int inputScore) {
+        if (firstDelivery == null) {
+            firstDelivery = new Delivery(Symbol.value(inputScore, false));
+            return true;
+        }
+        return false;
     }
 
-    public void delivery(int inputScore) {
-        if (firstDelivery == null || firstDelivery.isBlank()) {
-            firstDelivery = Score.value(inputScore, false);
-            return;
+    boolean secondDeliveryScore(int inputScore) {
+        if (secondDelivery == null) {
+            secondDelivery = new Delivery(Symbol.value(inputScore, spare(inputScore)));
+            return true;
         }
-        secondDelivery = Score.value(inputScore, spare(inputScore));
+        return false;
     }
 
-    boolean spare(int inputScore) {
-        if (Score.strike(firstDelivery)) {
-            return false;
-        }
+    abstract boolean spare(int inputScore);
 
-        int totalScore = Integer.parseInt(firstDelivery) + inputScore;
+    boolean spareDelivery(int inputScore, Delivery delivery) {
+        int totalScore = Integer.parseInt(Symbol.value(delivery.getDelivery())) + inputScore;
         if (totalScore > MAXIMUM_SCORE) {
-            throw new IllegalArgumentException("각 프레임의 점수의 합 10을 넘을 수 없습니다.");
+            throw new InvalidDeliveryScoreException("각 프레임 점수의 합 10을 넘을 수 없습니다.");
         }
         return totalScore == MAXIMUM_SCORE;
     }
 
-    public boolean additionallyDeliverable() {
-        return !Score.strike(firstDelivery) && secondDelivery == null;
-    }
+    public abstract boolean additionallyDeliverable();
 
     public String getFirstDelivery() {
-        return firstDelivery;
+        if (firstDelivery == null) {
+            return null;
+        }
+        return firstDelivery.getDelivery();
     }
 
     public String getSecondDelivery() {
-        return secondDelivery;
+        if (secondDelivery == null) { // TODO 이렇게 비교해야 하는지?
+            return null;
+        }
+        return secondDelivery.getDelivery();
     }
 }
