@@ -14,20 +14,21 @@ public enum Symbol {
         this.symbol = symbol;
     }
 
-    public static String value(int inputScore, boolean spare) { // TODO stream 고려?
+    public static State value(int inputScore, boolean spare) { // TODO stream 고려?
         if (spare) {
-            return SPARE.symbol;
+//            return new Spare();
         }
 
         if (inputScore == STRIKE_SCORE) {
-            return STRIKE.symbol;
+            return new Strike();
         }
 
         if (inputScore == GUTTER_SCORE) {
-            return GUTTER.symbol;
+            return new Gutter();
         }
 
-        return String.valueOf(inputScore);
+        return null;
+//        return new Miss();
     }
 
     public static String value(String symbol) {
@@ -43,10 +44,10 @@ public enum Symbol {
     }
 
     public static boolean strike(Delivery delivery) {
-        return STRIKE.symbol.equals(delivery.getDelivery());
+        return STRIKE.symbol.equals(delivery.getCountOfPins());
     }
 
     public static boolean spare(Delivery delivery) {
-        return SPARE.symbol.equals(delivery.getDelivery());
+        return SPARE.symbol.equals(delivery.getCountOfPins());
     }
 }

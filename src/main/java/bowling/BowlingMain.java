@@ -1,6 +1,6 @@
 package bowling;
 
-import bowling.domain.BowlingGame;
+import bowling.domain.Frames;
 import bowling.domain.Frame;
 import bowling.domain.Name;
 import bowling.view.InputView;
@@ -13,13 +13,13 @@ public class BowlingMain {
     public static void main(String[] args) {
         Name name = new Name(InputView.inputPlayerName());
 
-        BowlingGame bowlingGame = new BowlingGame();
+        Frames frames = new Frames();
         int frameIndex = INITIAL_INDEX;
 
         while (frameIndex < NUMBERS_OF_NORMAL_FRAMES) {
-            Frame frame = bowlingGame.frame(frameIndex);
+            Frame frame = frames.get(frameIndex);
             frame.delivery(InputView.inputScore(frameIndex + 1));
-            ResultView.printBowlingGame(name.getName(), bowlingGame);
+            ResultView.printBowlingGame(name.getName(), frames, frameIndex);
 
             if (frame.additionallyDeliverable()) {
                 continue;

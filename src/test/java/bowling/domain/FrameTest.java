@@ -1,6 +1,6 @@
 package bowling.domain;
 
-import bowling.exception.InvalidDeliveryScoreException;
+import bowling.exception.InvalidScoreException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +12,9 @@ class FrameTest {
     @Test
     void spareDelivery() {
         Frame frame = new NormalFrame();
-        frame.firstDelivery = new Delivery("5");
-        assertThatThrownBy(() -> frame.spareDelivery(6, frame.firstDelivery))
-                .isInstanceOf(InvalidDeliveryScoreException.class)
-                .hasMessageContaining("각 프레임 점수의 합 10을 넘을 수 없습니다.");
+//        get.state = new Delivery(5);
+//        assertThatThrownBy(() -> get.spareDelivery(6, get.state))
+//                .isInstanceOf(InvalidScoreException.class)
+//                .hasMessageContaining("각 프레임 점수의 합 10을 넘을 수 없습니다.");
     }
 }

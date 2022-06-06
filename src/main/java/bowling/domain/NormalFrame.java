@@ -1,19 +1,31 @@
 package bowling.domain;
 
 class NormalFrame extends Frame {
+    NormalFrame() {
+        this.firstState = new Ready();
+        this.secondState = new Ready();
+    }
 
-    public void delivery(int inputScore) {
-        if (firstDeliveryScore(inputScore)) {
+    @Override
+    public void delivery(int countOfPins) {
+        if (firstState instanceof Ready) {
+            firstState = firstState.bowl(countOfPins);
             return;
         }
-        secondDeliveryScore(inputScore);
+        secondState = firstState.bowl(countOfPins);
     }
 
-    boolean spare(int inputScore) {
-        return spareDelivery(inputScore, firstDelivery);
-    }
-
+    @Override
     public boolean additionallyDeliverable() {
-        return !Symbol.strike(firstDelivery) && secondDelivery == null;
+        return (firstState instanceof Ready || firstState instanceof FirstBowl) && secondState instanceof Ready;
+    }
+
+    @Override
+    public int getScore() {
+        if (firstState instanceof FirstBowl && secondState instanceof Ready) {
+            return 0;
+        }
+
+        return firstState.getCountOfPins() + secondState.getCountOfPins();
     }
 }
