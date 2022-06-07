@@ -27,7 +27,26 @@ public abstract class State {
         }
     }
 
+    private void validSecondCount(int countOfPins) {
+        if (countOfPins > MAX_COUNT_OF_PINS || this.countOfPins + countOfPins > MAX_COUNT_OF_PINS) {
+            throw new InvalidScoreException("핀을 쓰러뜨린 수는 10을 초과할 수 없습니다.");
+        }
+    }
+
     public abstract State bowl(int firstBowl);
+
+    State bowlSecond(int secondBowl) {
+        validSecondCount(secondBowl);
+        if (MIN_COUNT_OF_PINS == secondBowl) {
+            return new Gutter();
+        }
+
+        if (this.countOfPins + secondBowl == MAX_COUNT_OF_PINS) {
+            return new Spare(this.countOfPins, secondBowl);
+        }
+
+        return new Miss(this.countOfPins, secondBowl);
+    }
 
     public int getCountOfPins() {
         return countOfPins;

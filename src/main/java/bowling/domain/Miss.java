@@ -12,8 +12,4 @@ public class Miss extends State {
     public State bowl(int firstBowl) {
         return null;
     }
-
-    public int getPreBowl() {
-        return preBowl;
-    }
 }

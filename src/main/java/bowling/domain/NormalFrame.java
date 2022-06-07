@@ -17,7 +17,7 @@ class NormalFrame extends Frame {
 
     @Override
     public boolean additionallyDeliverable() {
-        return (firstState instanceof Ready || firstState instanceof FirstBowl) && secondState instanceof Ready;
+        return (firstState instanceof Ready || firstState instanceof FirstBowl || firstState instanceof Gutter) && secondState instanceof Ready;
     }
 
     @Override

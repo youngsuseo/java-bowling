@@ -3,8 +3,8 @@ package bowling.domain;
 import bowling.exception.CannotCalculateException;
 
 public class Score {
-    private int score; // 현재까지 점수
-    private int left; // 남은 시도 횟수
+    private int score;
+    private int left;
 
     public Score(int score, int left) {
         this.score = score;

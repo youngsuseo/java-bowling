@@ -8,6 +8,10 @@ public class Ready extends State {
             return new Strike();
         }
 
+        if (MIN_COUNT_OF_PINS == countOfPins) {
+            return new Gutter();
+        }
+
         return new FirstBowl(countOfPins);
     }
 }

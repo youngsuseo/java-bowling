@@ -22,12 +22,12 @@ public class ResultView {
 
         stringBuilder.append("\n|      |");
         for (int i = 0; i < frames.getFrames().size(); i++) {
-            int scores = frames.getScore(i + 1);
+            int scores = frames.getScore(i);
             if (frames.get(i) instanceof FinalFrame) {
-                stringBuilder.append(printCalculatedFinalScore(scores, frameIndex >= i));
+                stringBuilder.append(printCalculatedFinalScore(scores, i <= frameIndex));
                 continue;
             }
-            stringBuilder.append(printCalculatedScore(scores, frameIndex >= i));
+            stringBuilder.append(printCalculatedScore(scores, i <= frameIndex));
         }
 
         System.out.println(stringBuilder.toString());

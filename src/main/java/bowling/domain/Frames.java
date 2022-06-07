@@ -26,7 +26,7 @@ public class Frames {
 
     public int getScore(int frameIndex) {
         int result = 0;
-        for (int i = 0; i < frameIndex; i++) {
+        for (int i = 0; i <= frameIndex; i++) {
             if (i == 8) {
                 Frame thisFrame = frames.get(i);
                 FinalFrame nextFrame = (FinalFrame) frames.get(i + 1);
@@ -51,6 +51,9 @@ public class Frames {
 
             if (i == 9) {
                 FinalFrame thisFrame = (FinalFrame) frames.get(i);
+                if (!(thisFrame.secondState instanceof Miss) && (thisFrame.getBonusState() instanceof Ready)) {
+                    return 0;
+                }
                 result += thisFrame.getScore();
                 continue;
             }

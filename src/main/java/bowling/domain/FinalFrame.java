@@ -43,31 +43,10 @@ public class FinalFrame extends NormalFrame {
 
     @Override
     public int getScore() {
-//        if (firstState instanceof Ready || secondState instanceof Ready) {
-//            return 0;
-//        }
-//
-//        int result = 0;
-//        if (firstState instanceof Strike) {
-//            Score score = new Score(firstState.countOfPins, 2);
-//            Score bowl = score.bowl(secondState.countOfPins); // FIXME 값에 직접적으로 접근 하지 않도록
-//            Score totalScore = bowl.bowl(bonusState.countOfPins);
-//            result += totalScore.getScore();
-//        } else {
-//            result += firstState.countOfPins;
-//        }
-//
-//        // bonus 점수가 없는경우
-//
-//        if (secondState instanceof Spare || secondState instanceof Strike) {
-//            Score score = new Score(secondState.countOfPins, 1);
-//            Score bowl = score.bowl(bonusState.countOfPins);
-//            result += bowl.getScore();
-//        } else {
-//            result += secondState.countOfPins;
-//        }
-//
-//        return result + bonusState.countOfPins;
+        if ((secondState instanceof Ready || secondState instanceof Spare) && (bonusState instanceof Ready)) {
+            return 0;
+        }
+
         return firstState.countOfPins + secondState.countOfPins + bonusState.countOfPins;
     }
 
