@@ -115,4 +115,70 @@ class NormalFrameTest {
         assertThat(frame.getSecondState()).isEqualTo(new Miss(5, 4));
         assertThat(frame.additionallyDeliverable()).isFalse();
     }
+
+    @DisplayName("점수를 출력한다.")
+    @Test
+    void getScore() {
+        Frame frame = new NormalFrame();
+        frame.delivery(3);
+        frame.delivery(3);
+
+        assertThat(frame.getScore()).isEqualTo(6);
+    }
+
+    @DisplayName("볼링 점수 상태 (스트라이크, 스페어, 미스, 거터)에 따라 Score 객체 생성")
+    @Test
+    void createScore_strike() {
+        NormalFrame normalFrame = new NormalFrame();
+        normalFrame.delivery(10);
+        Score score = normalFrame.createScore();
+        assertThat(score).isEqualTo(new Score(10, 2));
+    }
+
+    @DisplayName("볼링 점수 상태 (스트라이크, 스페어, 미스, 거터)에 따라 Score 객체 생성")
+    @Test
+    void createScore_spare() {
+        NormalFrame normalFrame = new NormalFrame();
+        normalFrame.delivery(9);
+        normalFrame.delivery(1);
+        Score score = normalFrame.createScore();
+        assertThat(score).isEqualTo(new Score(10, 1));
+    }
+
+    @DisplayName("볼링 점수 상태 (스트라이크, 스페어, 미스, 거터)에 따라 Score 객체 생성")
+    @Test
+    void createScore_miss() {
+        NormalFrame normalFrame = new NormalFrame();
+        normalFrame.delivery(3);
+        normalFrame.delivery(3);
+        Score score = normalFrame.createScore();
+        assertThat(score).isEqualTo(new Score(6, 0));
+    }
+
+    @DisplayName("Frame이 추가 점수가 필요할 경우 next에서 결과 도출")
+    @Test
+    void getScore_miss() {
+        NormalFrame normalFrame1 = new NormalFrame();
+        normalFrame1.delivery(3);
+        normalFrame1.delivery(4);
+
+        int score = normalFrame1.getScore();
+        assertThat(score).isEqualTo(7);
+    }
+
+    @DisplayName("Frame이 추가 점수가 필요할 경우 next에서 결과 도출")
+    @Test
+    void getScore_spare() {
+        FrameLinkedList frameLinkedList = new FrameLinkedList();
+        frameLinkedList.add(new NormalFrame());
+        Frame frame1 = frameLinkedList.get();
+        frame1.delivery(3);
+        frame1.delivery(7);
+        Frame frame2 = frame1.next;
+        frame2.delivery(5);
+        frame2.delivery(1);
+
+        int score = frame1.getScore();
+        assertThat(score).isEqualTo(21);
+    }
 }

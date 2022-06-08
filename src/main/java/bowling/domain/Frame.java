@@ -1,8 +1,9 @@
 package bowling.domain;
 
 public abstract class Frame {
-    State firstState;
+    State firstState; // FIXME 우선 변수 3개로 하고 나중에 다시 1개가 되도록
     State secondState;
+    Frame next;
 
     public abstract void delivery(int countOfPins);
 

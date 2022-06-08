@@ -3,7 +3,7 @@ package bowling.domain;
 public class FinalFrame extends NormalFrame {
     private State bonusState;
 
-    public FinalFrame() {
+    FinalFrame() {
         super();
         this.bonusState = new Ready();
     }
