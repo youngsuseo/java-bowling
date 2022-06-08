@@ -126,35 +126,6 @@ class NormalFrameTest {
         assertThat(frame.getScore()).isEqualTo(6);
     }
 
-    @DisplayName("볼링 점수 상태 (스트라이크, 스페어, 미스, 거터)에 따라 Score 객체 생성")
-    @Test
-    void createScore_strike() {
-        NormalFrame normalFrame = new NormalFrame();
-        normalFrame.delivery(10);
-        Score score = normalFrame.createScore();
-        assertThat(score).isEqualTo(new Score(10, 2));
-    }
-
-    @DisplayName("볼링 점수 상태 (스트라이크, 스페어, 미스, 거터)에 따라 Score 객체 생성")
-    @Test
-    void createScore_spare() {
-        NormalFrame normalFrame = new NormalFrame();
-        normalFrame.delivery(9);
-        normalFrame.delivery(1);
-        Score score = normalFrame.createScore();
-        assertThat(score).isEqualTo(new Score(10, 1));
-    }
-
-    @DisplayName("볼링 점수 상태 (스트라이크, 스페어, 미스, 거터)에 따라 Score 객체 생성")
-    @Test
-    void createScore_miss() {
-        NormalFrame normalFrame = new NormalFrame();
-        normalFrame.delivery(3);
-        normalFrame.delivery(3);
-        Score score = normalFrame.createScore();
-        assertThat(score).isEqualTo(new Score(6, 0));
-    }
-
     @DisplayName("Frame이 추가 점수가 필요할 경우 next에서 결과 도출")
     @Test
     void getScore_miss() {

@@ -10,48 +10,34 @@ public class FinalFrame extends NormalFrame {
 
     @Override
     public void delivery(int countOfPins) {
-        if (firstState instanceof Ready) {
-            firstState = firstState.bowl(countOfPins);
+        if (states.finalDelivery(countOfPins)) {
             return;
         }
 
-        if (firstState instanceof Strike && secondState instanceof Ready) {
-            secondState = secondState.bowl(countOfPins);
-            return;
-        }
-
-        if (secondState instanceof Ready) {
-            secondState = firstState.bowl(countOfPins);
-            return;
-        }
-
-        if (secondState instanceof Strike || secondState instanceof Spare) {
+        if (states.getSecondState() instanceof Strike || states.getSecondState() instanceof Spare) {
             bonusState = bonusState.bowl(countOfPins);
             return;
         }
 
-        if (firstState instanceof Strike) {
-            bonusState = secondState.bowl(countOfPins);
+        if (states.getFirstState() instanceof Strike) {
+            bonusState = states.getSecondState().bowl(countOfPins);
         }
     }
 
+
+
     @Override
     public boolean additionallyDeliverable() {
-        return bonusState instanceof Ready
-                && (firstState instanceof Strike || secondState instanceof Spare || secondState instanceof Ready);
+        return bonusState instanceof Ready && states.finalAdditionallyDeliverable();
     }
 
     @Override
     public int getScore() {
-        if ((secondState instanceof Ready || secondState instanceof Spare) && (bonusState instanceof Ready)) {
+        if ((states.getSecondState() instanceof Ready || states.getSecondState() instanceof Spare) && (bonusState instanceof Ready)) {
             return 0;
         }
 
-        return firstState.countOfPins + secondState.countOfPins + bonusState.countOfPins;
-    }
-
-    public State getSecondState() {
-        return secondState;
+        return states.getFirstState().countOfPins + states.getSecondState().countOfPins + bonusState.countOfPins;
     }
 
     public State getBonusState() {

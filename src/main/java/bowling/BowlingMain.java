@@ -1,5 +1,6 @@
 package bowling;
 
+import bowling.domain.FrameLinkedList;
 import bowling.domain.Frames;
 import bowling.domain.Frame;
 import bowling.domain.Name;
@@ -17,7 +18,8 @@ public class BowlingMain {
         int frameIndex = INITIAL_INDEX;
 
         while (frameIndex < NUMBERS_OF_NORMAL_FRAMES) {
-            Frame frame = frames.get(frameIndex);
+            FrameLinkedList frameLinkedList = frames.getFrames();
+            Frame frame = frameLinkedList.get(frameIndex);
             frame.delivery(InputView.inputScore(frameIndex + 1));
             ResultView.printBowlingGame(name.getName(), frames, frameIndex);
 

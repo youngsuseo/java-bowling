@@ -109,14 +109,11 @@ public class Frames {
         return result;
     }
 
-    public Frame get(int frameIndex) {
-//        return frames.get(frameIndex);
-        return null;
+    public Frame get() {
+        return frames.get();
     }
 
-    public List<Frame> getFrames() {
-        return new ArrayList<>();
-//        return frames;
-//        return null;
+    public FrameLinkedList getFrames() {
+        return frames;
     }
 }

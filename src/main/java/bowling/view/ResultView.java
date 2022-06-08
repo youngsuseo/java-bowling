@@ -1,18 +1,19 @@
 package bowling.view;
 
-import bowling.domain.FinalFrame;
-import bowling.domain.Frame;
-import bowling.domain.Frames;
+import bowling.domain.*;
 
 import java.util.Optional;
 
 public class ResultView {
+    private static final int NUMBERS_OF_NORMAL_FRAMES = 10;
 
     public static void printBowlingGame(String playerName, Frames frames, int frameIndex) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("| NAME |  01  |  02  |  03  |  04  |  05  |  06  |  07  |  08  |  09  |   10   |\n");
         stringBuilder.append("| ").append(String.format("%4s", playerName)).append(" |");
-        for (Frame frame : frames.getFrames()) {
+        FrameLinkedList frameLinkedList = frames.getFrames();
+        for (int i = 0; i <= frameLinkedList.size(); i++) {
+            Frame frame = frameLinkedList.get(i);
             if (frame instanceof FinalFrame) {
                 stringBuilder.append(printFinalScore((FinalFrame) frame));
                 continue;
@@ -21,13 +22,14 @@ public class ResultView {
         }
 
         stringBuilder.append("\n|      |");
-        for (int i = 0; i < frames.getFrames().size(); i++) {
-            int scores = frames.getScore(i);
-            if (frames.get(i) instanceof FinalFrame) {
-                stringBuilder.append(printCalculatedFinalScore(scores, i <= frameIndex));
+        for (int i = 0; i < frameLinkedList.size(); i++) {
+            Frame frame = frameLinkedList.get(i);
+            int score = frame.getScore();
+            if (frame instanceof FinalFrame) {
+                stringBuilder.append(printCalculatedFinalScore(score, i <= frameIndex));
                 continue;
             }
-            stringBuilder.append(printCalculatedScore(scores, i <= frameIndex));
+            stringBuilder.append(printCalculatedScore(score, i <= frameIndex));
         }
 
         System.out.println(stringBuilder.toString());
