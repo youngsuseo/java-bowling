@@ -13,7 +13,7 @@ class NormalFrameTest {
     void delivery_spare() {
         Frame frame = new NormalFrame();
         frame.delivery(1);
-        frame.delivery(9); // TODO 필요 없다면 secondDelivery만 남기고 state 제거 -> 필요 없을 것 같다.
+        frame.delivery(9);
 
         assertThat(frame.getSecondState()).isEqualTo(new Spare(1, 9));
     }
@@ -149,7 +149,9 @@ class NormalFrameTest {
         frame2.delivery(5);
         frame2.delivery(1);
 
-        int score = frame1.getScore();
-        assertThat(score).isEqualTo(21);
+        int score1 = frame1.getScore();
+        assertThat(score1).isEqualTo(15);
+        int score2 = frame2.getScore();
+        assertThat(score2).isEqualTo(6);
     }
 }

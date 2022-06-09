@@ -10,7 +10,7 @@ public abstract class Frame {
 
     public abstract int getScore();
 
-    public States getStates() {
+    States getStates() {
         return states;
     }
 

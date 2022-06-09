@@ -14,33 +14,36 @@ public class States {
         this.secondState = secondState;
     }
 
-    public void delivery(int countOfPins) {
-        if (firstState instanceof Ready) {
-            firstState = firstState.bowl(countOfPins);
-            return;
-        }
-        secondState = firstState.bowl(countOfPins);
-    }
-
     public boolean finalDelivery(int countOfPins) {
-        if (firstState instanceof Ready) {
-            firstState = firstState.bowl(countOfPins);
+        if (firstBowl(countOfPins)) {
             return true;
         }
 
-        if (firstState instanceof Strike && secondState instanceof Ready) {
+        if (firstState instanceof Strike && secondState instanceof Ready) { // FIXME 조건 변경 가능한지 확인
             secondState = secondState.bowl(countOfPins);
             return true;
         }
 
-        if (secondState instanceof Ready) {
+        return secondBowl(countOfPins);
+    }
+
+    boolean firstBowl(int countOfPins) {
+        if (firstState instanceof Ready) {
+            firstState = firstState.bowl(countOfPins);
+            return true;
+        }
+        return false;
+    }
+
+    boolean secondBowl(int countOfPins) {
+        if (secondState instanceof Ready) { // FIXME instanceOf 대신 사용할 수 있는 것?
             secondState = firstState.bowl(countOfPins);
             return true;
         }
         return false;
     }
 
-    public boolean additionallyDeliverable() {
+    public boolean additionallyDeliverable() {// FIXME 조건 변경 가능한지 확인
         return (firstState instanceof Ready || firstState instanceof FirstBowl || firstState instanceof Gutter) && secondState instanceof Ready;
     }
 

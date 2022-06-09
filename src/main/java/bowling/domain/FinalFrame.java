@@ -24,8 +24,6 @@ public class FinalFrame extends NormalFrame {
         }
     }
 
-
-
     @Override
     public boolean additionallyDeliverable() {
         return bonusState instanceof Ready && states.finalAdditionallyDeliverable();
@@ -33,7 +31,7 @@ public class FinalFrame extends NormalFrame {
 
     @Override
     public int getScore() {
-        if ((states.getSecondState() instanceof Ready || states.getSecondState() instanceof Spare) && (bonusState instanceof Ready)) {
+        if ((states.getSecondState() instanceof Ready || states.getSecondState() instanceof Spare || states.getSecondState() instanceof Strike) && (bonusState instanceof Ready)) {
             return 0;
         }
 

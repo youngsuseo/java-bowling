@@ -1,11 +1,14 @@
 package bowling.domain;
 
 public class FrameLinkedList {
+    private static final int INITIAL_SIZE = 1;
+
     private int size;
     private Frame head;
 
     FrameLinkedList() {
         this.head = new NormalFrame();
+        this.size = INITIAL_SIZE;
     }
 
     void add(Frame newFrame) {
@@ -17,7 +20,7 @@ public class FrameLinkedList {
         this.size++;
     }
 
-    public Frame get() {
+    Frame get() {
         return head;
     }
 
@@ -25,13 +28,7 @@ public class FrameLinkedList {
         return search(index);
     }
 
-    // 특정 위치의 노드를 반환하는 메소드
     private Frame search(int index) {
-
-        // 범위 밖(잘못된 위치)일 경우 예외 던지기
-//        if(index < 0 || index >= size) {
-//            throw new IndexOutOfBoundsException();
-//        }
 
         Frame start = head; // head부터 시작
 

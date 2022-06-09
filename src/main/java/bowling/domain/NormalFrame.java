@@ -8,7 +8,10 @@ class NormalFrame extends Frame {
 
     @Override
     public void delivery(int countOfPins) {
-        states.delivery(countOfPins);
+        if (states.firstBowl(countOfPins)) {
+            return;
+        }
+        states.secondBowl(countOfPins);
     }
 
     @Override
@@ -45,10 +48,18 @@ class NormalFrame extends Frame {
         if (beforeScore.getLeft() == 2) {
             beforeBowl = beforeScore.bowl(next.states.getFirstState().countOfPins);
             if (next.states.getSecondState() instanceof Ready) {
-                if (next.next.states.getFirstState() instanceof Ready) {
-                    return 0;
+
+                if (next.next == null) {
+                    if (next.states.getSecondState() instanceof Ready) {
+                        return 0;
+                    }
+                    beforeBowl = beforeBowl.bowl(next.states.getSecondState().countOfPins);
+                } else {
+                    if (next.next.states.getFirstState() instanceof Ready) {
+                        return 0;
+                    }
+                    beforeBowl = beforeBowl.bowl(next.next.states.getFirstState().countOfPins);
                 }
-                beforeBowl = beforeBowl.bowl(next.next.states.getFirstState().countOfPins);
             } else {
                 if (next.states.getSecondState() instanceof Ready) {
                     return 0;
