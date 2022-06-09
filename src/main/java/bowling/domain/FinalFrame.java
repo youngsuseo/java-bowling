@@ -14,28 +14,29 @@ public class FinalFrame extends NormalFrame {
             return;
         }
 
-        if (states.getSecondState() instanceof Strike || states.getSecondState() instanceof Spare) {
+        if (StateEnum.isStrike(secondState()) || StateEnum.isSpare(secondState())) {
             bonusState = bonusState.bowl(countOfPins);
             return;
         }
 
-        if (states.getFirstState() instanceof Strike) {
+        if (StateEnum.isStrike(firstState())) {
             bonusState = states.getSecondState().bowl(countOfPins);
         }
     }
 
     @Override
     public boolean additionallyDeliverable() {
-        return bonusState instanceof Ready && states.finalAdditionallyDeliverable();
+        return StateEnum.isReady(bonusState) && states.additionallyFinalDeliverable();
     }
 
     @Override
     public int getScore() {
-        if ((states.getSecondState() instanceof Ready || states.getSecondState() instanceof Spare || states.getSecondState() instanceof Strike) && (bonusState instanceof Ready)) {
+        if ((StateEnum.isReady(secondState()) || StateEnum.isSpare(secondState()) || StateEnum.isStrike(secondState()))
+                && StateEnum.isReady(bonusState)) {
             return 0;
         }
 
-        return states.getFirstState().countOfPins + states.getSecondState().countOfPins + bonusState.countOfPins;
+        return firstState().countOfPins + secondState().countOfPins + bonusState.countOfPins;
     }
 
     public State getBonusState() {

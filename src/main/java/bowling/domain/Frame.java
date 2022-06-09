@@ -14,10 +14,6 @@ public abstract class Frame {
         return states;
     }
 
-    public Frame getNext() {
-        return next;
-    }
-
     public State getFirstState() {
         return states.getFirstState();
     }

@@ -1,25 +1,24 @@
 package bowling.domain;
 
 public class States {
+    private static final int CALCULATE_TWICE = 2;
+    private static final int CALCULATE_ONCE = 1;
+    private static final int NO_MORE_CALCULATION = 0;
+
     private State firstState;
     private State secondState;
 
-    public States() {
+    States() {
         this.firstState = new Ready();
         this.secondState = new Ready();
     }
 
-    public States(State firstState, State secondState) {
-        this.firstState = firstState;
-        this.secondState = secondState;
-    }
-
-    public boolean finalDelivery(int countOfPins) {
+    boolean finalDelivery(int countOfPins) {
         if (firstBowl(countOfPins)) {
             return true;
         }
 
-        if (firstState instanceof Strike && secondState instanceof Ready) { // FIXME 조건 변경 가능한지 확인
+        if (StateEnum.isStrike(firstState) && StateEnum.isReady(secondState)) {
             secondState = secondState.bowl(countOfPins);
             return true;
         }
@@ -28,7 +27,7 @@ public class States {
     }
 
     boolean firstBowl(int countOfPins) {
-        if (firstState instanceof Ready) {
+        if (StateEnum.isReady(firstState)) {
             firstState = firstState.bowl(countOfPins);
             return true;
         }
@@ -36,43 +35,44 @@ public class States {
     }
 
     boolean secondBowl(int countOfPins) {
-        if (secondState instanceof Ready) { // FIXME instanceOf 대신 사용할 수 있는 것?
+        if (StateEnum.isReady(secondState)) {
             secondState = firstState.bowl(countOfPins);
             return true;
         }
         return false;
     }
 
-    public boolean additionallyDeliverable() {// FIXME 조건 변경 가능한지 확인
-        return (firstState instanceof Ready || firstState instanceof FirstBowl || firstState instanceof Gutter) && secondState instanceof Ready;
+    boolean additionallyDeliverable() {
+        return (StateEnum.isReady(firstState) || StateEnum.isFirstBowl(firstState) || StateEnum.isGutter(firstState))
+                && StateEnum.isReady(secondState);
     }
 
-    public boolean finalAdditionallyDeliverable() {
-        return firstState instanceof Strike || secondState instanceof Spare || secondState instanceof Ready;
+    boolean additionallyFinalDeliverable() {
+        return StateEnum.isStrike(firstState) || StateEnum.isSpare(secondState) || StateEnum.isReady(secondState);
     }
 
     Score createScore() {
         int score = getThisFrameScore();
-        if (firstState instanceof Strike) {
-            return new Score(score, 2);
+        if (StateEnum.isStrike(firstState)) {
+            return new Score(score, CALCULATE_TWICE);
         }
 
-        if (secondState instanceof Spare) {
-            return new Score(score, 1);
+        if (StateEnum.isSpare(secondState)) {
+            return new Score(score, CALCULATE_ONCE);
         }
 
-        return new Score(score, 0);
+        return new Score(score, NO_MORE_CALCULATION);
     }
 
     private int getThisFrameScore() {
         return firstState.countOfPins + secondState.countOfPins;
     }
 
-    public State getFirstState() {
+    State getFirstState() {
         return firstState;
     }
 
-    public State getSecondState() {
+    State getSecondState() {
         return secondState;
     }
 }
