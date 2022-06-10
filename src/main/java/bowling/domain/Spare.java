@@ -5,7 +5,7 @@ public class Spare extends State {
 
     private int preBowl;
 
-    public Spare(int firstBowl, int secondBowl) {
+    Spare(int firstBowl, int secondBowl) {
         super(secondBowl, SPARE_SYMBOL);
         this.preBowl = firstBowl;
     }
@@ -13,9 +13,5 @@ public class Spare extends State {
     @Override
     public State bowl(int firstBowl) {
         return null;
-    }
-
-    public int getPreBowl() {
-        return preBowl;
     }
 }

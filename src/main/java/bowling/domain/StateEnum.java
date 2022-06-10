@@ -9,7 +9,7 @@ public enum StateEnum {
     STRIKE("Strike"),
     SPARE("Spare"),
     MISS("Miss"),
-    GUTTER("Miss");
+    GUTTER("Gutter");
 
     private String className;
 

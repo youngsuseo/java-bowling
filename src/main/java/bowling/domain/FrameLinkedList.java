@@ -29,13 +29,11 @@ public class FrameLinkedList {
     }
 
     private Frame search(int index) {
-
-        Frame start = head; // head부터 시작
-
+        Frame before = head;
         for (int i = 0; i < index; i++) {
-            start = start.next; // x노드의 다음 노드를 x에 저장한다.
+            before = before.next;
         }
-        return start;
+        return before;
     }
 
     public int size() {

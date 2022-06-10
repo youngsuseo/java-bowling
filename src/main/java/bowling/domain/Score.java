@@ -5,10 +5,17 @@ import bowling.exception.CannotCalculateException;
 import java.util.Objects;
 
 public class Score {
+    private static final int NO_MORE_CALCULATION = 0;
+    private static final int DEFAULT_VALUE = 0;
+
     private int score;
     private int left;
 
-    public Score(int score, int left) {
+    Score() {
+        this(DEFAULT_VALUE, DEFAULT_VALUE);
+    }
+
+    Score(int score, int left) {
         this.score = score;
         this.left = left;
     }
@@ -17,18 +24,18 @@ public class Score {
         return new Score(score += countOfPins, left - 1);
     }
 
-    public int getScore() {
+    int getScore() {
         if (!canCalculateScore()) {
             throw new CannotCalculateException("점수를 계산 할 수 없습니다.");
         }
         return this.score;
     }
 
-    public boolean canCalculateScore() {
-        return left == 0;
+    boolean canCalculateScore() {
+        return left == NO_MORE_CALCULATION;
     }
 
-    public int getLeft() {
+    int getLeft() {
         return left;
     }
 

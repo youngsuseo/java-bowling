@@ -25,7 +25,7 @@ class NormalFrame extends Frame {
 
     @Override
     public int getScore() {
-        if (StateEnum.isFirstBowl(firstState()) && StateEnum.isReady(secondState())) {
+        if ((StateEnum.isFirstBowl(firstState()) || StateEnum.isFirstBowl(firstState())) && StateEnum.isReady(secondState())) {
             return 0;
         }
 
@@ -39,37 +39,17 @@ class NormalFrame extends Frame {
 
 
     private int calculateAdditionalScore(Score beforeScore) {
-        // TODO beforeScore에 현재 Frame의 쓰러진 Pin을 추가해 점수를 구하는 로직 구현
         Score beforeBowl = null;
-        if (next.states.getFirstState() instanceof Ready) {
+        if (incalculable(next.getFirstState())) {
             return NOT_COMPLETED_CALCULATION;
         }
 
         if (beforeScore.getLeft() == CALCULATE_ONCE) {
-            beforeBowl = beforeScore.bowl(next.states.getFirstState().countOfPins);
+            beforeBowl = beforeScore.bowl(next.getFirstState().countOfPins);
         }
 
         if (beforeScore.getLeft() == CALCULATE_TWICE) {
-            beforeBowl = beforeScore.bowl(next.states.getFirstState().countOfPins);
-            if (next.states.getSecondState() instanceof Ready) {
-
-                if (next.next == null) {
-                    if (next.states.getSecondState() instanceof Ready) {
-                        return NOT_COMPLETED_CALCULATION;
-                    }
-                    beforeBowl = beforeBowl.bowl(next.states.getSecondState().countOfPins);
-                } else {
-                    if (next.next.states.getFirstState() instanceof Ready) {
-                        return NOT_COMPLETED_CALCULATION;
-                    }
-                    beforeBowl = beforeBowl.bowl(next.next.states.getFirstState().countOfPins);
-                }
-            } else {
-                if (next.states.getSecondState() instanceof Ready) {
-                    return NOT_COMPLETED_CALCULATION;
-                }
-                beforeBowl = beforeBowl.bowl(next.states.getSecondState().countOfPins);
-            }
+            beforeBowl = calculateTwice(beforeScore);
         }
 
         if (beforeBowl == null) {
@@ -77,6 +57,36 @@ class NormalFrame extends Frame {
         }
 
         return beforeBowl.getScore();
+    }
+
+    private Score calculateTwice(Score beforeScore) {
+        Score beforeBowl = beforeScore.bowl(next.getFirstState().countOfPins);
+        return addTwice(beforeBowl);
+    }
+
+    private Score addTwice(Score beforeBowl) {
+        if (StateEnum.isReady(next.getSecondState())) {
+            return secondAddition(beforeBowl);
+        }
+        return bowl(beforeBowl, next.getSecondState(), next.getSecondState().countOfPins);
+    }
+
+    private Score secondAddition(Score beforeBowl) {
+        if (next.next == null) {
+            return bowl(beforeBowl, next.getSecondState(), next.getSecondState().countOfPins);
+        }
+        return bowl(beforeBowl, next.next.getFirstState(), next.next.getFirstState().countOfPins);
+    }
+
+    private boolean incalculable(State state) {
+        return StateEnum.isReady(state);
+    }
+
+    private Score bowl(Score beforeBowl, State state, int countOfPins) {
+        if (incalculable(state)) {
+            return new Score();
+        }
+        return beforeBowl.bowl(countOfPins);
     }
 
     State firstState() {

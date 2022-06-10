@@ -1,6 +1,6 @@
 package bowling.domain;
 
-public class States {
+class States {
     private static final int CALCULATE_TWICE = 2;
     private static final int CALCULATE_ONCE = 1;
     private static final int NO_MORE_CALCULATION = 0;

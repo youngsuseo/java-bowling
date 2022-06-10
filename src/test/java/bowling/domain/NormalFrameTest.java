@@ -128,17 +128,6 @@ class NormalFrameTest {
 
     @DisplayName("Frame이 추가 점수가 필요할 경우 next에서 결과 도출")
     @Test
-    void getScore_miss() {
-        NormalFrame normalFrame1 = new NormalFrame();
-        normalFrame1.delivery(3);
-        normalFrame1.delivery(4);
-
-        int score = normalFrame1.getScore();
-        assertThat(score).isEqualTo(7);
-    }
-
-    @DisplayName("Frame이 추가 점수가 필요할 경우 next에서 결과 도출")
-    @Test
     void getScore_spare() {
         FrameLinkedList frameLinkedList = new FrameLinkedList();
         frameLinkedList.add(new NormalFrame());
