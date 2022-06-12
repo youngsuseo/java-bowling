@@ -11,4 +11,8 @@ public class InputView {
     public static int inputScore(int frameIndex) {
         return InputUtils.scanNumber(frameIndex + "프레임 투구: ");
     }
+
+    public static int inputNumberOfPlayers() {
+        return InputUtils.scanNumber("How many people? ");
+    }
 }

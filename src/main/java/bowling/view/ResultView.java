@@ -1,6 +1,9 @@
 package bowling.view;
 
-import bowling.domain.*;
+import bowling.domain.frame.FinalFrame;
+import bowling.domain.frame.Frame;
+import bowling.domain.frame.FrameLinkedList;
+import bowling.domain.frame.Frames;
 
 import java.util.Optional;
 
@@ -25,21 +28,25 @@ public class ResultView {
         stringBuilder.append("\n|      |");
         int resultScore = 0;
         for (int i = 0; i < frameLinkedList.size(); i++) {
-            boolean visible = i <= frameIndex;
             Frame frame = frameLinkedList.get(i);
             int score = frame.getScore();
-            if (score == 0) {
-                visible = false;
-            }
             resultScore += score;
             if (frame instanceof FinalFrame) {
-                stringBuilder.append(printCalculatedScore(PRINT_FINAL_FRAME_FORMAT, resultScore, visible));
+                stringBuilder.append(printCalculatedScore(PRINT_FINAL_FRAME_FORMAT, resultScore, isVisible(frameIndex, i, score)));
                 continue;
             }
-            stringBuilder.append(printCalculatedScore(PRINT_NORMAL_FRAME_FORMAT, resultScore, visible));
+            stringBuilder.append(printCalculatedScore(PRINT_NORMAL_FRAME_FORMAT, resultScore, isVisible(frameIndex, i, score)));
         }
 
         System.out.println(stringBuilder.toString());
+    }
+
+    private static boolean isVisible(int frameIndex, int i, int score) {
+        boolean visible = i <= frameIndex;
+        if (score == 0) {
+            visible = false;
+        }
+        return visible;
     }
 
     private static String printScore(Frame frame) {

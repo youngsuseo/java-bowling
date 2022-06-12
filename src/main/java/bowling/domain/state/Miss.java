@@ -1,15 +1,17 @@
-package bowling.domain;
+package bowling.domain.state;
+
+import bowling.exception.IllegalBowlException;
 
 public class Miss extends State {
     private int preBowl;
 
-    Miss(int firstBowl, int secondBowl) {
+    public Miss(int firstBowl, int secondBowl) {
         super(secondBowl, String.valueOf(secondBowl));
         this.preBowl = firstBowl;
     }
 
     @Override
     public State bowl(int firstBowl) {
-        return null;
+        throw new IllegalBowlException("실행할 수 없는 메서드 입니다.");
     }
 }

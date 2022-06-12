@@ -1,7 +1,7 @@
-package bowling.domain;
+package bowling.domain.state;
 
 public class FirstBowl extends State {
-    FirstBowl(int firstBowl) {
+    public FirstBowl(int firstBowl) {
         validCount(firstBowl);
         this.countOfPins = firstBowl;
         this.symbol = String.valueOf(firstBowl);

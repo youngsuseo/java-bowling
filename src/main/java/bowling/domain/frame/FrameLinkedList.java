@@ -1,4 +1,7 @@
-package bowling.domain;
+package bowling.domain.frame;
+
+import bowling.domain.frame.NormalFrame;
+import bowling.domain.frame.Frame;
 
 public class FrameLinkedList {
     private static final int INITIAL_SIZE = 1;

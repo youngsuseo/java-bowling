@@ -1,4 +1,6 @@
-package bowling.domain;
+package bowling.domain.frame;
+
+import bowling.domain.frame.NormalFrame;
 
 public class Frames {
     private static final int NUMBERS_OF_NORMAL_FRAME = 9;

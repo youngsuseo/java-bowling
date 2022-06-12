@@ -1,5 +1,7 @@
-package bowling.domain;
+package bowling.domain.state;
 
+import bowling.domain.frame.NormalFrame;
+import bowling.domain.state.StateEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

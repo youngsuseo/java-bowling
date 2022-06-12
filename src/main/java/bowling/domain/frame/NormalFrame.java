@@ -1,35 +1,40 @@
-package bowling.domain;
+package bowling.domain.frame;
 
-class NormalFrame extends Frame {
+import bowling.domain.Score;
+import bowling.domain.state.State;
+import bowling.domain.state.StateEnum;
+import bowling.domain.state.FullFrameState;
+
+public class NormalFrame extends Frame {
     private static final int NOT_COMPLETED_CALCULATION = 0;
     private static final int CALCULATE_TWICE = 2;
     private static final int CALCULATE_ONCE = 1;
 
-    NormalFrame() {
-        this.states = new States();
+    public NormalFrame() {
+        this.fullFrameState = new FullFrameState();
         this.next = null;
     }
 
     @Override
     public void delivery(int countOfPins) {
-        if (states.firstBowl(countOfPins)) {
+        if (fullFrameState.firstBowl(countOfPins)) {
             return;
         }
-        states.secondBowl(countOfPins);
+        fullFrameState.secondBowl(countOfPins);
     }
 
     @Override
     public boolean additionallyDeliverable() {
-        return states.additionallyDeliverable();
+        return fullFrameState.additionallyDeliverable();
     }
 
     @Override
     public int getScore() {
         if ((StateEnum.isFirstBowl(firstState()) || StateEnum.isFirstBowl(firstState())) && StateEnum.isReady(secondState())) {
-            return 0;
+            return NOT_COMPLETED_CALCULATION;
         }
 
-        Score score = states.createScore();
+        Score score = fullFrameState.createScore();
         if (score.canCalculateScore()) {
             return score.getScore();
         }
@@ -45,7 +50,7 @@ class NormalFrame extends Frame {
         }
 
         if (beforeScore.getLeft() == CALCULATE_ONCE) {
-            beforeBowl = beforeScore.bowl(next.getFirstState().countOfPins);
+            beforeBowl = beforeScore.bowl(next.getFirstState().getCountOfPins());
         }
 
         if (beforeScore.getLeft() == CALCULATE_TWICE) {
@@ -60,7 +65,7 @@ class NormalFrame extends Frame {
     }
 
     private Score calculateTwice(Score beforeScore) {
-        Score beforeBowl = beforeScore.bowl(next.getFirstState().countOfPins);
+        Score beforeBowl = beforeScore.bowl(next.getFirstState().getCountOfPins());
         return addTwice(beforeBowl);
     }
 
@@ -68,14 +73,14 @@ class NormalFrame extends Frame {
         if (StateEnum.isReady(next.getSecondState())) {
             return secondAddition(beforeBowl);
         }
-        return bowl(beforeBowl, next.getSecondState(), next.getSecondState().countOfPins);
+        return bowl(beforeBowl, next.getSecondState(), next.getSecondState().getCountOfPins());
     }
 
-    private Score secondAddition(Score beforeBowl) {
+    private Score secondAddition(Score beforeBowl) { // FIXME 디미터 법칙
         if (next.next == null) {
-            return bowl(beforeBowl, next.getSecondState(), next.getSecondState().countOfPins);
+            return bowl(beforeBowl, next.getSecondState(), next.getSecondState().getCountOfPins());
         }
-        return bowl(beforeBowl, next.next.getFirstState(), next.next.getFirstState().countOfPins);
+        return bowl(beforeBowl, next.next.getFirstState(), next.next.getFirstState().getCountOfPins());
     }
 
     private boolean incalculable(State state) {
@@ -89,11 +94,11 @@ class NormalFrame extends Frame {
         return beforeBowl.bowl(countOfPins);
     }
 
-    State firstState() {
-        return states.getFirstState();
+    public State firstState() {
+        return fullFrameState.getFirstHalfFrameState();
     }
 
-    State secondState() {
-        return states.getSecondState();
+    public State secondState() {
+        return fullFrameState.getSecondHalfFrameState();
     }
 }
