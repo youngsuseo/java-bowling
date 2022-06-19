@@ -3,38 +3,54 @@ package bowling.domain.frame;
 import bowling.domain.Score;
 import bowling.domain.state.State;
 import bowling.domain.state.StateEnum;
-import bowling.domain.state.FullFrameState;
 
-public class NormalFrame extends Frame {
-    private static final int NOT_COMPLETED_CALCULATION = 0;
-    private static final int CALCULATE_TWICE = 2;
-    private static final int CALCULATE_ONCE = 1;
+public class NormalFrame extends AbstractFrame {
 
     public NormalFrame() {
-        this.fullFrameState = new FullFrameState();
-        this.next = null;
+        super();
     }
 
     @Override
-    public void delivery(int countOfPins) {
-        if (fullFrameState.firstBowl(countOfPins)) {
+    public void bowl(int countOfFallenPins) {
+        if (fullFrameState.firstBowl(countOfFallenPins)) {
             return;
         }
-        fullFrameState.secondBowl(countOfPins);
+        fullFrameState.secondBowl(countOfFallenPins);
     }
 
     @Override
-    public boolean additionallyDeliverable() {
-        return fullFrameState.additionallyDeliverable();
+    public boolean capableOfAdditionalBowling() {
+        return fullFrameState.capableOfAdditionalBowling();
     }
 
     @Override
     public int getScore() {
-        if ((StateEnum.isFirstBowl(firstState()) || StateEnum.isFirstBowl(firstState())) && StateEnum.isReady(secondState())) {
-            return NOT_COMPLETED_CALCULATION;
+        // 처음 값이 running, 두번째가 ready 이면 값을 0으로 출력,
+        // 처음 값이 finish이면 score 값 가져오기.
+        // 그리고 계산
+
+        // 첫번째 상태가 finish이면 first 에서 score를 가져오고
+        // 그렇지 않다면 두번째 상태를 가지고 score를 가져온다.
+
+        // 만약 score가 기본값인 경우 -> return 0;
+        // score 값을 가지고 계산
+
+
+        Score score;
+        if (StateEnum.isStrike(getFirstHalfFrameState())) {
+            score = getFirstHalfFrameState().getScore();
+        } else {
+            score = getSecondHalfFrameState().getScore();
         }
 
-        Score score = fullFrameState.createScore();
+
+
+
+//        if ((StateEnum.isFirstBowl(getFirstHalfFrameState()) || StateEnum.isGutter(getFirstHalfFrameState())) && StateEnum.isReady(getSecondHalfFrameState())) {
+//            return NOT_COMPLETED_CALCULATION;
+//        }
+//
+//        Score score = fullFrameState.createScore();
         if (score.canCalculateScore()) {
             return score.getScore();
         }
@@ -45,12 +61,12 @@ public class NormalFrame extends Frame {
 
     private int calculateAdditionalScore(Score beforeScore) {
         Score beforeBowl = null;
-        if (incalculable(next.getFirstState())) {
+        if (incalculable(next.getFirstHalfFrameState())) {
             return NOT_COMPLETED_CALCULATION;
         }
 
         if (beforeScore.getLeft() == CALCULATE_ONCE) {
-            beforeBowl = beforeScore.bowl(next.getFirstState().getCountOfPins());
+            beforeBowl = beforeScore.bowl(next.getFirstHalfFrameCountOfPins());
         }
 
         if (beforeScore.getLeft() == CALCULATE_TWICE) {
@@ -65,22 +81,22 @@ public class NormalFrame extends Frame {
     }
 
     private Score calculateTwice(Score beforeScore) {
-        Score beforeBowl = beforeScore.bowl(next.getFirstState().getCountOfPins());
+        Score beforeBowl = beforeScore.bowl(next.getFirstHalfFrameCountOfPins());
         return addTwice(beforeBowl);
     }
 
     private Score addTwice(Score beforeBowl) {
-        if (StateEnum.isReady(next.getSecondState())) {
+        if (StateEnum.isReady(next.getSecondHalfFrameState())) {
             return secondAddition(beforeBowl);
         }
-        return bowl(beforeBowl, next.getSecondState(), next.getSecondState().getCountOfPins());
+        return bowl(beforeBowl, next.getSecondHalfFrameState(), next.getSecondHalfFrameCountOfPins());
     }
 
-    private Score secondAddition(Score beforeBowl) { // FIXME 디미터 법칙
-        if (next.next == null) {
-            return bowl(beforeBowl, next.getSecondState(), next.getSecondState().getCountOfPins());
+    private Score secondAddition(Score beforeBowl) {
+        if (next.next != null) {
+            return bowl(beforeBowl, next.next.getFirstHalfFrameState(), next.next.getFirstHalfFrameCountOfPins());
         }
-        return bowl(beforeBowl, next.next.getFirstState(), next.next.getFirstState().getCountOfPins());
+        return bowl(beforeBowl, next.getSecondHalfFrameState(), next.getSecondHalfFrameCountOfPins());
     }
 
     private boolean incalculable(State state) {
@@ -92,13 +108,5 @@ public class NormalFrame extends Frame {
             return new Score();
         }
         return beforeBowl.bowl(countOfPins);
-    }
-
-    public State firstState() {
-        return fullFrameState.getFirstHalfFrameState();
-    }
-
-    public State secondState() {
-        return fullFrameState.getSecondHalfFrameState();
     }
 }

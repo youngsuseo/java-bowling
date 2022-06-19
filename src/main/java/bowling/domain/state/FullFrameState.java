@@ -7,44 +7,44 @@ public class FullFrameState {
     private static final int CALCULATE_ONCE = 1;
     private static final int NO_MORE_CALCULATION = 0;
 
-    private State firstHalfFrameState;
-    private State secondHalfFrameState;
+    private AbstractState firstHalfFrameState;
+    private AbstractState secondHalfFrameState;
 
     public FullFrameState() {
         this.firstHalfFrameState = new Ready();
         this.secondHalfFrameState = new Ready();
     }
 
-    public boolean finalDelivery(int countOfPins) {
-        if (firstBowl(countOfPins)) {
+    public boolean firstBowl(int countOfFallenPins) {
+        if (StateEnum.isReady(firstHalfFrameState)) {
+            firstHalfFrameState = firstHalfFrameState.bowl(countOfFallenPins);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean secondBowl(int countOfFallenPins) {
+        if (StateEnum.isReady(secondHalfFrameState)) {
+            secondHalfFrameState = firstHalfFrameState.bowl(countOfFallenPins);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean finalDelivery(int countOfFallenPins) {
+        if (firstBowl(countOfFallenPins)) {
             return true;
         }
 
         if (StateEnum.isStrike(firstHalfFrameState) && StateEnum.isReady(secondHalfFrameState)) {
-            secondHalfFrameState = secondHalfFrameState.bowl(countOfPins);
+            secondHalfFrameState = secondHalfFrameState.bowl(countOfFallenPins);
             return true;
         }
 
-        return secondBowl(countOfPins);
+        return secondBowl(countOfFallenPins);
     }
 
-    public boolean firstBowl(int countOfPins) {
-        if (StateEnum.isReady(firstHalfFrameState)) {
-            firstHalfFrameState = firstHalfFrameState.bowl(countOfPins);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean secondBowl(int countOfPins) {
-        if (StateEnum.isReady(secondHalfFrameState)) {
-            secondHalfFrameState = firstHalfFrameState.bowl(countOfPins);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean additionallyDeliverable() {
+    public boolean capableOfAdditionalBowling() {
         return (StateEnum.isReady(firstHalfFrameState) || StateEnum.isFirstBowl(firstHalfFrameState) || StateEnum.isGutter(firstHalfFrameState))
                 && StateEnum.isReady(secondHalfFrameState);
     }
@@ -67,14 +67,22 @@ public class FullFrameState {
     }
 
     private int getThisFrameScore() {
-        return firstHalfFrameState.countOfPins + secondHalfFrameState.countOfPins;
+        return firstHalfFrameState.getFallenPins() + secondHalfFrameState.fallenPins;
     }
 
-    public State getFirstHalfFrameState() {
+    public AbstractState getFirstHalfFrameState() {
         return firstHalfFrameState;
     }
 
-    public State getSecondHalfFrameState() {
+    public int getFirstHalfFrameCountOfFallenPins() {
+        return firstHalfFrameState.getFallenPins();
+    }
+
+    public AbstractState getSecondHalfFrameState() {
         return secondHalfFrameState;
+    }
+
+    public int getSecondHalfFrameCountOfFallenPins() {
+        return secondHalfFrameState.getFallenPins();
     }
 }

@@ -1,14 +1,14 @@
 package bowling.domain.state;
 
-public class Gutter extends State {
+public class Gutter extends Running {
     private static final String GUTTER_SYMBOL = "-";
 
-    public Gutter() {
+    Gutter() {
         super(MIN_COUNT_OF_PINS, GUTTER_SYMBOL);
     }
 
     @Override
-    public State bowl(int secondBowl) {
-        return bowlSecond(secondBowl);
+    public AbstractState bowl(int fallenPins) {
+        return bowlSecond(fallenPins);
     }
 }

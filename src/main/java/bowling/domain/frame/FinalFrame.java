@@ -1,13 +1,11 @@
 package bowling.domain.frame;
 
-import bowling.domain.state.Ready;
-import bowling.domain.state.State;
-import bowling.domain.state.StateEnum;
+import bowling.domain.state.*;
 
-public class FinalFrame extends NormalFrame {
+public class FinalFrame extends AbstractFrame {
     private static final int NOT_COMPLETED_CALCULATION = 0;
 
-    private State bonusState;
+    private AbstractState bonusState;
 
     FinalFrame() {
         super();
@@ -15,37 +13,37 @@ public class FinalFrame extends NormalFrame {
     }
 
     @Override
-    public void delivery(int countOfPins) {
-        if (fullFrameState.finalDelivery(countOfPins)) {
+    public void bowl(int fallenPinsCount) {
+        if (fullFrameState.finalDelivery(fallenPinsCount)) {
             return;
         }
 
-        if (StateEnum.isStrike(secondState()) || StateEnum.isSpare(secondState())) {
-            bonusState = bonusState.bowl(countOfPins);
+        if (StateEnum.isStrike(getSecondHalfFrameState()) || StateEnum.isSpare(getSecondHalfFrameState())) {
+            bonusState = bonusState.bowl(fallenPinsCount);
             return;
         }
 
-        if (StateEnum.isStrike(firstState())) {
-            bonusState = fullFrameState.getSecondHalfFrameState().bowl(countOfPins);
+        if (StateEnum.isStrike(getFirstHalfFrameState())) {
+            bonusState = fullFrameState.getSecondHalfFrameState().bowl(fallenPinsCount);
         }
     }
 
     @Override
-    public boolean additionallyDeliverable() {
+    public boolean capableOfAdditionalBowling() {
         return StateEnum.isReady(bonusState) && fullFrameState.additionallyFinalDeliverable();
     }
 
     @Override
     public int getScore() {
-        if ((StateEnum.isReady(secondState()) || StateEnum.isSpare(secondState()) || StateEnum.isStrike(secondState()))
+        if ((StateEnum.isReady(getSecondHalfFrameState()) || StateEnum.isSpare(getSecondHalfFrameState()) || StateEnum.isStrike(getSecondHalfFrameState()))
                 && StateEnum.isReady(bonusState)) {
             return NOT_COMPLETED_CALCULATION;
         }
 
-        return firstState().getCountOfPins() + secondState().getCountOfPins() + bonusState.getCountOfPins();
+        return getFirstHalfFrameCountOfPins() + getSecondHalfFrameCountOfPins() + bonusState.getFallenPins();
     }
 
-    public State getBonusState() {
+    public AbstractState getBonusState() {
         return bonusState;
     }
 }

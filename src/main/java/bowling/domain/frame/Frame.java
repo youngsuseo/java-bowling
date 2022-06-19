@@ -1,27 +1,10 @@
 package bowling.domain.frame;
 
-import bowling.domain.state.State;
-import bowling.domain.state.FullFrameState;
+public interface Frame {
 
-public abstract class Frame {
-    FullFrameState fullFrameState;
-    Frame next;
+    void bowl(int fallenPinsCount);
 
-    public abstract void delivery(int countOfPins);
+    boolean capableOfAdditionalBowling();
 
-    public abstract boolean additionallyDeliverable();
-
-    public abstract int getScore();
-
-    public FullFrameState getFullFrameState() {
-        return fullFrameState;
-    }
-
-    public State getFirstState() {
-        return fullFrameState.getFirstHalfFrameState();
-    }
-
-    public State getSecondState() {
-        return fullFrameState.getSecondHalfFrameState();
-    }
+    int getScore();
 }

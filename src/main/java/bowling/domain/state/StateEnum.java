@@ -3,18 +3,19 @@ package bowling.domain.state;
 import java.util.Arrays;
 
 public enum StateEnum {
-    STATE("State"),
-    READY("Ready"),
-    FIRST_BOWL("FirstBowl"),
-    STRIKE("Strike"),
-    SPARE("Spare"),
-    MISS("Miss"),
-    GUTTER("Gutter");
+    READY("Ready", "Running"),
+    FIRST_BOWL("FirstBowl", "Running"),
+    STRIKE("Strike", "Finished"),
+    SPARE("Spare", "Finished"),
+    MISS("Miss", "Finished"),
+    GUTTER("Gutter", "Running");
 
     private String className;
+    private String superClassName;
 
-    StateEnum(String className) {
+    StateEnum(String className, String superClassName) {
         this.className = className;
+        this.superClassName = superClassName;
     }
 
     public static boolean isReady(State state) {
@@ -41,10 +42,25 @@ public enum StateEnum {
         return value(state, GUTTER);
     }
 
+    public static boolean isRunning(State state) {
+        return valueOfSuperClass(state, "Running");
+    }
+
+    public static boolean isFinished(State state) {
+        return valueOfSuperClass(state, "Finished");
+    }
+
     private static boolean value(State state, StateEnum referenceState) {
         StateEnum matchedState = Arrays.stream(values())
                                        .filter(stateEnum -> stateEnum.className.equals(state.getClass().getSimpleName()))
-                                       .findFirst().orElse(STATE);
+                                       .findFirst().orElse(READY);
         return referenceState == matchedState;
+    }
+
+    private static boolean valueOfSuperClass(State state, String superClassName) {
+        StateEnum matchedState = Arrays.stream(values())
+                                       .filter(stateEnum -> stateEnum.className.equals(state.getClass().getSimpleName()))
+                                       .findFirst().orElse(READY);
+        return superClassName.equals(matchedState.superClassName);
     }
 }

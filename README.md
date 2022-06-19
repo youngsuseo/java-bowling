@@ -12,7 +12,7 @@
 1. 사용자 입력 (이름이 blank가 아니고, 3글자 이내의 이름을 가지도록 구현)
 2. 반복문으로 각 프레임 별 결과 입력 (숫자 입력)
 3. BowlingGame list 객체를 만든다.
-    (1) normal frame, final frame 을 가지도록 list 생성
+    (1) normal abstractFrame, final abstractFrame 을 가지도록 list 생성
 4. Normal Frame
     (1) Frame 값으로 숫자를 입력한다.
     (2) Frame 입력된 값을 첫번째인지, 두번째인지 판단한다.

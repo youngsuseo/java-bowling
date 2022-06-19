@@ -1,14 +1,20 @@
 package bowling.domain.state;
 
-public class FirstBowl extends State {
+import bowling.domain.Score;
+
+public class FirstBowl extends Running {
+
     public FirstBowl(int firstBowl) {
-        validCount(firstBowl);
-        this.countOfPins = firstBowl;
-        this.symbol = String.valueOf(firstBowl);
+        super(firstBowl, String.valueOf(firstBowl));
     }
 
     @Override
-    public State bowl(int secondBowl) {
-        return bowlSecond(secondBowl);
+    public AbstractState bowl(int fallenPins) {
+        return bowlSecond(fallenPins);
+    }
+
+    @Override
+    public Score calculateAdditionalScore(Score score) {
+        return null;
     }
 }

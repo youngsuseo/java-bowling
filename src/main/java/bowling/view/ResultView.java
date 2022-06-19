@@ -1,9 +1,8 @@
 package bowling.view;
 
+import bowling.domain.frame.*;
 import bowling.domain.frame.FinalFrame;
-import bowling.domain.frame.Frame;
-import bowling.domain.frame.FrameLinkedList;
-import bowling.domain.frame.Frames;
+import bowling.domain.frame.AbstractFrame;
 
 import java.util.Optional;
 
@@ -17,21 +16,21 @@ public class ResultView {
         stringBuilder.append("| ").append(String.format("%4s", playerName)).append(" |");
         FrameLinkedList frameLinkedList = frames.getFrames();
         for (int i = 0; i < frameLinkedList.size(); i++) {
-            Frame frame = frameLinkedList.get(i);
-            if (frame instanceof FinalFrame) {
-                stringBuilder.append(printFinalScore((FinalFrame) frame));
+            AbstractFrame abstractFrame = frameLinkedList.get(i);
+            if (abstractFrame instanceof FinalFrame) {
+                stringBuilder.append(printFinalScore((FinalFrame) abstractFrame));
                 continue;
             }
-            stringBuilder.append(printScore(frame));
+            stringBuilder.append(printScore(abstractFrame));
         }
 
         stringBuilder.append("\n|      |");
         int resultScore = 0;
         for (int i = 0; i < frameLinkedList.size(); i++) {
-            Frame frame = frameLinkedList.get(i);
-            int score = frame.getScore();
+            AbstractFrame abstractFrame = frameLinkedList.get(i);
+            int score = abstractFrame.getScore();
             resultScore += score;
-            if (frame instanceof FinalFrame) {
+            if (abstractFrame instanceof FinalFrame) {
                 stringBuilder.append(printCalculatedScore(PRINT_FINAL_FRAME_FORMAT, resultScore, isVisible(frameIndex, i, score)));
                 continue;
             }
@@ -49,16 +48,16 @@ public class ResultView {
         return visible;
     }
 
-    private static String printScore(Frame frame) {
+    private static String printScore(AbstractFrame abstractFrame) {
         String other;
-        if (frame.getFirstState().getCountOfPins() == 0) {
+        if (abstractFrame.getFirstHalfFrameState().getFallenPins() == 0) {
             other = "";
         } else {
-            other = String.valueOf(frame.getFirstState().getCountOfPins());
+            other = String.valueOf(abstractFrame.getFirstHalfFrameState().getFallenPins());
         }
 
-        String firstScore = Optional.ofNullable(frame.getFirstState().getSymbol()).orElse(other);
-        String secondScore = Optional.ofNullable(frame.getSecondState().getSymbol()).orElse("");
+        String firstScore = Optional.ofNullable(abstractFrame.getFirstHalfFrameState().getSymbol()).orElse(other);
+        String secondScore = Optional.ofNullable(abstractFrame.getSecondHalfFrameState().getSymbol()).orElse("");
 
         if (!"".equals(secondScore)) {
             secondScore = "|" + secondScore;
@@ -68,8 +67,8 @@ public class ResultView {
     }
 
     private static String printFinalScore(FinalFrame finalFrame) {
-        String firstScore = Optional.ofNullable(finalFrame.getFirstState().getSymbol()).orElse("");
-        String secondScore = Optional.ofNullable(finalFrame.getSecondState().getSymbol()).orElse("");
+        String firstScore = Optional.ofNullable(finalFrame.getFirstHalfFrameState().getSymbol()).orElse("");
+        String secondScore = Optional.ofNullable(finalFrame.getSecondHalfFrameState().getSymbol()).orElse("");
         String bonusScore = Optional.ofNullable(finalFrame.getBonusState().getSymbol()).orElse("");
 
         if (!"".equals(secondScore)) {
