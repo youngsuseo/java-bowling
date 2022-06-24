@@ -14,7 +14,7 @@ public class FinalFrame extends AbstractFrame {
 
     @Override
     public void bowl(int fallenPinsCount) {
-        if (fullFrameState.finalDelivery(fallenPinsCount)) {
+        if (fullFrameState.finalBowl(fallenPinsCount)) {
             return;
         }
 
@@ -24,13 +24,13 @@ public class FinalFrame extends AbstractFrame {
         }
 
         if (StateEnum.isStrike(getFirstHalfFrameState())) {
-            bonusState = fullFrameState.getSecondHalfFrameState().bowl(fallenPinsCount);
+            bonusState = fullFrameState.secondFrameBowl(fallenPinsCount);
         }
     }
 
     @Override
     public boolean capableOfAdditionalBowling() {
-        return StateEnum.isReady(bonusState) && fullFrameState.additionallyFinalDeliverable();
+        return StateEnum.isReady(bonusState) && fullFrameState.capableOfFinalAdditionalBowling();
     }
 
     @Override

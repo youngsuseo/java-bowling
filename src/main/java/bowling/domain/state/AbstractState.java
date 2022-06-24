@@ -12,7 +12,7 @@ public abstract class AbstractState implements State {
     static final int NO_MORE_CALCULATION = 0;
 
     int fallenPins;
-    String symbol;
+    private String symbol;
 
     public AbstractState() {
     }
@@ -23,14 +23,10 @@ public abstract class AbstractState implements State {
         this.symbol = symbol;
     }
 
-    void validCount(int fallenPins) {
+    private void validCount(int fallenPins) {
         if (fallenPins > MAX_COUNT_OF_PINS) {
             throw new InvalidScoreException("핀을 쓰러뜨린 수는 10을 초과할 수 없습니다.");
         }
-    }
-
-    private boolean incalculable(State state) { // FIXME 이쪽으로 해서 동작 할 수 있도록
-        return StateEnum.isReady(state);
     }
 
     public int getFallenPins() {

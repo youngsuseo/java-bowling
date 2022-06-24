@@ -22,7 +22,7 @@ public abstract class AbstractFrame implements Frame {
 
     public abstract int getScore();
 
-    public AbstractState getFirstHalfFrameState() { // FIXME getter 삭제 고려
+    public AbstractState getFirstHalfFrameState() {
         return fullFrameState.getFirstHalfFrameState();
     }
 

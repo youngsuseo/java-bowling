@@ -31,7 +31,7 @@ public class FullFrameState {
         return false;
     }
 
-    public boolean finalDelivery(int countOfFallenPins) {
+    public boolean finalBowl(int countOfFallenPins) {
         if (firstBowl(countOfFallenPins)) {
             return true;
         }
@@ -45,29 +45,11 @@ public class FullFrameState {
     }
 
     public boolean capableOfAdditionalBowling() {
-        return (StateEnum.isReady(firstHalfFrameState) || StateEnum.isFirstBowl(firstHalfFrameState) || StateEnum.isGutter(firstHalfFrameState))
-                && StateEnum.isReady(secondHalfFrameState);
+        return StateEnum.isRunning(firstHalfFrameState) && StateEnum.isReady(secondHalfFrameState);
     }
 
-    public boolean additionallyFinalDeliverable() {
+    public boolean capableOfFinalAdditionalBowling() {
         return StateEnum.isStrike(firstHalfFrameState) || StateEnum.isSpare(secondHalfFrameState) || StateEnum.isReady(secondHalfFrameState);
-    }
-
-    public Score createScore() {
-        int score = getThisFrameScore();
-        if (StateEnum.isStrike(firstHalfFrameState)) {
-            return new Score(score, CALCULATE_TWICE);
-        }
-
-        if (StateEnum.isSpare(secondHalfFrameState)) {
-            return new Score(score, CALCULATE_ONCE);
-        }
-
-        return new Score(score, NO_MORE_CALCULATION);
-    }
-
-    private int getThisFrameScore() {
-        return firstHalfFrameState.getFallenPins() + secondHalfFrameState.fallenPins;
     }
 
     public AbstractState getFirstHalfFrameState() {
@@ -84,5 +66,9 @@ public class FullFrameState {
 
     public int getSecondHalfFrameCountOfFallenPins() {
         return secondHalfFrameState.getFallenPins();
+    }
+
+    public AbstractState secondFrameBowl(int fallenPinsCount) {
+        return secondHalfFrameState.bowl(fallenPinsCount);
     }
 }

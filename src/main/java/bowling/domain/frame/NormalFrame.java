@@ -25,37 +25,24 @@ public class NormalFrame extends AbstractFrame {
 
     @Override
     public int getScore() {
-        // 처음 값이 running, 두번째가 ready 이면 값을 0으로 출력,
-        // 처음 값이 finish이면 score 값 가져오기.
-        // 그리고 계산
+        Score score = getResultScore();
 
-        // 첫번째 상태가 finish이면 first 에서 score를 가져오고
-        // 그렇지 않다면 두번째 상태를 가지고 score를 가져온다.
-
-        // 만약 score가 기본값인 경우 -> return 0;
-        // score 값을 가지고 계산
-
-
-        Score score;
-        if (StateEnum.isStrike(getFirstHalfFrameState())) {
-            score = getFirstHalfFrameState().getScore();
-        } else {
-            score = getSecondHalfFrameState().getScore();
-        }
-
-
-
-
-//        if ((StateEnum.isFirstBowl(getFirstHalfFrameState()) || StateEnum.isGutter(getFirstHalfFrameState())) && StateEnum.isReady(getSecondHalfFrameState())) {
-//            return NOT_COMPLETED_CALCULATION;
-//        }
-//
-//        Score score = fullFrameState.createScore();
         if (score.canCalculateScore()) {
             return score.getScore();
         }
 
         return calculateAdditionalScore(score);
+    }
+
+    private Score getResultScore() {
+        if (StateEnum.isFinished(getFirstHalfFrameState())) {
+            return getFirstHalfFrameState().getScore();
+        }
+
+        if (StateEnum.isFinished(getSecondHalfFrameState()) || (StateEnum.isGutter(getFirstHalfFrameState()) && StateEnum.isGutter(getSecondHalfFrameState()) )) {
+            return getSecondHalfFrameState().getScore();
+        }
+        return new Score();
     }
 
 

@@ -1,7 +1,5 @@
 package bowling.domain.state;
 
-import bowling.domain.Score;
-
 public class FirstBowl extends Running {
 
     public FirstBowl(int firstBowl) {
@@ -11,10 +9,5 @@ public class FirstBowl extends Running {
     @Override
     public AbstractState bowl(int fallenPins) {
         return bowlSecond(fallenPins);
-    }
-
-    @Override
-    public Score calculateAdditionalScore(Score score) {
-        return null;
     }
 }

@@ -3,7 +3,6 @@ package bowling.domain.state;
 import bowling.domain.Score;
 import bowling.exception.InvalidScoreException;
 
-
 public abstract class Running extends AbstractState {
 
     public Running() {
